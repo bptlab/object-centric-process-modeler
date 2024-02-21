@@ -92,24 +92,12 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
   if (element.type === 'od:Class') {
     createLinkObjectsEntry(actions);
     createLinkNewObjectEntry(actions);
-    createLinkMakeCaseClass(actions);
   }
 
   return actions;
 
   function removeElement() {
     modeling.removeElements([ element ]);
-  }
-    
-  function makeCaseClass() {
-      
-    var classes = elementRegistry.filter(element => is(element, 'od:Class'));
-      
-    // set all case classes to false
-    classes.forEach(clazz => modeling.updateProperties(clazz, {caseClass: false}));
-    
-    // set case class for context element to true
-    modeling.updateProperties(element, {caseClass: true}) 
   }
 
   function createDeleteEntry(actions) {
@@ -163,27 +151,6 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
         translate('Link with new object')
       ),
     });
-  }
-
-    function createLinkMakeCaseClass(actions) {
-    
-        var createCaseClassAllowed = true;
-        if (element.businessObject.caseClass == true) {
-            createCaseClassAllowed = false;
-        }
-        
-        if (createCaseClassAllowed) {
-            assign(actions, {
-              'make-case-class': {
-                group: 'make-case-class',
-                className: 'od-case-class',
-                title: 'Toggle case class',
-                action: {
-                  click: makeCaseClass
-                },
-              },
-            });
-        }
   }
 
   /**

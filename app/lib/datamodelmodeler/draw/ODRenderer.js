@@ -183,9 +183,6 @@ export default function ODRenderer(
     if (semantic.name) {
       text = semantic.name;
     }
-    if (element.businessObject.caseClass == true) {
-      text = "<<Case Object>> " + text
-    }
     renderLabel(parentGfx, text, {
       box: {
         height: 30,

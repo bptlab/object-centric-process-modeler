@@ -23,24 +23,6 @@ export function getConnectedElements(element) {
     return visited;
 }
 
-export function getConnectedByExistentialAssociation(caseClass, classDependents) {
-
-    let visited = [];
-
-    function visit(element) {
-        if (visited.includes(element)) {
-            return;
-        }
-        visited.push(element);
-        (classDependents[element.id] || []).forEach(visit);
-    }
-
-    visit(caseClass);
-
-    return visited;
-}
-
-
 /**
  * Get for each class the other classes that depend on it
  */
