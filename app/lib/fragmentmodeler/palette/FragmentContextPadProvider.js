@@ -16,7 +16,6 @@ export default class FragmentContextPadProvider {
 
 		return function(entries) {
 			delete entries["append.end-event"];
-			delete entries["append.text-annotation"];
 
 			if (is(element, 'bpmn:DataObjectReference') && element.type !== 'label') {
 				delete entries['replace'];
