@@ -1,9 +1,9 @@
 import FragmentModeler from './lib/fragmentmodeler/FragmentModeler';
 import diagramXML from '../resources/newDiagram.bpmn';
-import datamodelXML from '../resources/sampleBoard.bpmn';
 import newDatamodel from '../resources/emptyBoard.bpmn';
 import OlcModeler from './lib/olcmodeler/OlcModeler';
-// import InitialStateModeler from './lib/initialstatemodeler/InitialStateModeler';
+// To decide: Do we consistently rename objective modeler to initial state modeler?
+import InitialStateModeler from './lib/objectivemodeler/OmModeler';
 import DataModelModeler from './lib/datamodelmodeler/Modeler';
 
 import $ from 'jquery';
@@ -15,7 +15,6 @@ import { download, upload } from './lib/util/FileUtil';
 import conferenceProcess from '../resources/conferenceModel/process.bpmn';
 import conferenceDataModel from '../resources/conferenceModel/datamodel.xml';
 import conferenceOLC from '../resources/conferenceModel/olc.xml';
-// import conferenceInitialState from '../resources/conferenceModel/initialState.xml';
 
 import Zip from 'jszip';
 
@@ -57,11 +56,14 @@ var fragmentModeler = new FragmentModeler({
     }]
 });
 
-// var initialStateModeler = new InitialStateModeler(
-//   '#initialstate-canvas'
-// );
-// new mediator.InitialStateModelerHook(initialStateModeler);
-
+var initialStateModeler = new InitialStateModeler({
+  container: '#initialstate-canvas',
+  keyboard: { bindTo: document.querySelector('#initialstate-canvas') },
+  additionalModules: [{
+    __init__ : ['mediator'],
+    mediator : ['type', mediator.ObjectiveModelerHook]
+  }]
+});
 
 
 const errorBar = new ErrorBar(document.getElementById("errorBar"), mediator);
@@ -73,7 +75,6 @@ async function loadDebugData() {
   zip.file('fragments.bpmn', conferenceProcess);
   zip.file('dataModel.xml', conferenceDataModel);
   zip.file('olcs.xml', conferenceOLC);
-  // zip.file('initialState.xml', conferenceInitialState);
   await importFromZip(zip.generateAsync({type : 'base64'}));
 }
 
@@ -83,7 +84,7 @@ async function createNewDiagram() {
       await fragmentModeler.importXML(diagramXML);
       await olcModeler.createNew();
       await dataModeler.importXML(newDatamodel);
-      // await initialStateModeler.createNew();
+      await initialStateModeler.createDiagram();
       if (LOAD_DUMMY) {
         await loadDebugData();
       } 
@@ -117,8 +118,8 @@ async function exportToZip () {
   zip.file('dataModel.xml', dataModel);
   const olcs = (await olcModeler.saveXML({ format: true })).xml;
   zip.file('olcs.xml', olcs);
-  // const initialState = (await initialStateModeler.saveXML({ format: true })).xml;
-  // zip.file('initialState.xml', initialState);
+  const initialState = (await initialStateModeler.saveXML({ format: true })).xml;
+  zip.file('initialState.xml', initialState);
   return zip.generateAsync({type : 'base64'});
 }
 
@@ -129,7 +130,7 @@ async function importFromZip (zipData) {
     fragments: zip.file('fragments.bpmn'),
     dataModel: zip.file('dataModel.xml'),
     olcs: zip.file('olcs.xml'),
-    // initialState: zip.file('initialState.xml'),
+    initialState: zip.file('initialState.xml'),
   };
   Object.keys(files).forEach(key => {
     if (!files[key]) {
@@ -139,7 +140,7 @@ async function importFromZip (zipData) {
   await dataModeler.importXML(await files.dataModel.async("string"));
   await olcModeler.importXML(await files.olcs.async("string"));
   await fragmentModeler.importXML(await files.fragments.async("string"));
-  // await initialStateModeler.importXML(await files.initialState.async("string"));
+  await initialStateModeler.importXML(await files.initialState.async("string"));
   checker.activate();
 }
 
