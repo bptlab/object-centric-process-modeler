@@ -10,6 +10,7 @@ export default class FragmentPaletteProvider {
             delete entries['create.group'];
             delete entries['create.participant-expanded'];
             delete entries['create.end-event'];
+            delete entries['create.start-event'];
 
             return entries;
         }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <od:definitions xmlns:od="http://tk/schema/od" xmlns:odDi="http://tk/schema/odDi" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC">
   <od:odBoard id="Board">
-    <od:class name="Conference" id="Object_0spiahz" caseClass="true" type="od:Class" />
+    <od:class name="Conference" id="Object_0spiahz" type="od:Class" />
     <od:class name="Paper" id="Object_1f0k77j" type="od:Class">
       <od:associations>Association_1bmgvlo</od:associations>
     </od:class>
