@@ -11,6 +11,8 @@ export default class FragmentPaletteProvider {
             delete entries['create.participant-expanded'];
             delete entries['create.end-event'];
             delete entries['create.start-event'];
+            delete entries['create.intermediate-event'];
+            delete entries['create.exclusive-gateway'];
 
             return entries;
         }
